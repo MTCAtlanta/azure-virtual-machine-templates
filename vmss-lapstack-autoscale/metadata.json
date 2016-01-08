@@ -1,0 +1,7 @@
+{
+  "itemDisplayName": "Create a Virtual Machine Scaleset with basic Autoscale triggers - Does not include the virtual network.",
+  "description": "This template allows you to create a Virtual Machine Scaleset with basic Autoscale triggers - Does not include the virtual network.",
+  "summary": "Create a VMSS with Autoscale policy.",
+  "githubUsername": "albertwo1978",
+  "dateUpdated": "2016-01-07"
+}
