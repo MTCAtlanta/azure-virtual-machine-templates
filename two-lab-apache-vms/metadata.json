@@ -1,0 +1,7 @@
+{
+  "itemDisplayName": "Create two Apache web servers on specific subnets for a Lab environment.",
+  "description": "This template allows you to create two Ubuntu Apache web servers and specify the virtual networks where they deploy",
+  "summary": "Create two Apache VMs.",
+  "githubUsername": "albertwo1978",
+  "dateUpdated": "2016-01-12"
+}
