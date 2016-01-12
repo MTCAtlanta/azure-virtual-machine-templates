@@ -11,7 +11,7 @@
     },
     "UniqueStorageAccountName": {
       "type": "string",
-      "defaultValue": "armnetworkingworkshop",
+      "defaultValue": "",
       "metadata": {
         "description": "Relative DNS Name for the Storage Account where the Virtual Machine's disks will be placed, must be globally unique."
       }

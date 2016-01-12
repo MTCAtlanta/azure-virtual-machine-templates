@@ -1,4 +1,4 @@
-# Create two Apache VMs with a default Hellow World website.
+# Create two Apache VMs with a default Hello World website.
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMTCAtlanta%2Fazure-virtual-machine-templates%2Fmaster%2Ftwo-lab-apache-vms%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
