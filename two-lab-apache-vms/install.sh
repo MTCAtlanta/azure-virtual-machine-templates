@@ -7,7 +7,7 @@ apt-get -y install apache2 php5
 # write some PHP
 cd /var/www/html
 
-https://raw.githubusercontent.com/MTCAtlanta/azure-virtual-machine-templates/master/two-lab-apache-vms/index.php
+wget https://raw.githubusercontent.com/MTCAtlanta/azure-virtual-machine-templates/master/two-lab-apache-vms/index.php
 rm /var/www/html/index.html
 # restart Apache
 apachectl restart
