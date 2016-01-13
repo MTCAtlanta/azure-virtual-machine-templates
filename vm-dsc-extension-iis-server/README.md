@@ -1,6 +1,6 @@
 # VM-DSC-Extension-IIS-Server
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMTCAtlanta%2Fazure-virtual-machine-templates%2Fmaster%2Fwin-iis-vm%2Fazuredeploy.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMTCAtlanta%2Fazure-virtual-machine-templates%2Fmaster%2Fvm-dsc-extension-iis-server%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
