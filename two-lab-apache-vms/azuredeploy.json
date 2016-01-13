@@ -183,8 +183,12 @@
         "publisher": "Microsoft.OSTCExtensions",
         "type": "CustomScriptForLinux",
         "typeHandlerVersion": "1.3",
+        "autoUpgradeMinorVersion": true,
         "settings": {
-          "commandToExecute": "sudo bash -c 'apt-get update && apt-get -y install apache2' "
+          "fileUris": [
+            "https://raw.githubusercontent.com/MTCAtlanta/azure-virtual-machine-templates/master/two-lab-apache-vms/install.sh"
+          ],
+          "commandToExecute": "bash install.sh"
         }
       }
     },
