@@ -79,9 +79,7 @@
   "variables": {
     "tmApiVersion": "2015-04-28-preview",
     "apiVersion": "2015-05-01-preview",
-    "imagePublisher": "Canonical",
-    "imageOffer": "UbuntuServer",
-    "OSDiskName": "osdiskforlinuxsimple",
+    "OSDiskName": "osdiskforwindows",
     "nicName": "myVMNic",
     "storageAccountType": "Standard_LRS",
     "publicIPAddressName": "myPublicIP",
