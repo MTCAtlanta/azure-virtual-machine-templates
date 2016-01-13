@@ -66,31 +66,24 @@
       "metadata": {
         "description": "Location of resources"
       }
-    },
-    "configurationFunction": {
-      "type": "string",
-      "defaultValue": "ContosoWebsite.ps1\\ContosoWebsite",
-      "metadata": {
-        "description": "DSC configuration function to call"
-      }
     }
   },
 
   "variables": {
-    "tmApiVersion": "2015-04-28-preview",
     "apiVersion": "2015-05-01-preview",
-    "OSDiskName": "osdiskforwindows",
+    "imageOffer": "WindowsServer",
+    "imagePublisher": "MicrosoftWindowsServer",
     "nicName": "myVMNic",
-    "storageAccountType": "Standard_LRS",
+    "OSDiskName": "osdiskforwindows",
     "publicIPAddressName": "myPublicIP",
     "publicIPAddressType": "Dynamic",
-    "vmStorageAccountContainerName": "vhds",
+    "storageAccountType": "Standard_LRS",
+    "subnetName": "FrontEnd",
+    "tmApiVersion": "2015-04-28-preview",
+    "vmExtensionName": "dscExtension",
     "vmName": "MyWinVM",
     "vmSize": "Standard_A1",
-    "subnetName": "FrontEnd",
-    "imagePublisher": "MicrosoftWindowsServer",
-    "imageOffer": "WindowsServer",
-    "vmExtensionName": "dscExtension"
+    "vmStorageAccountContainerName": "vhds"
   },
   "resources": [
     {
