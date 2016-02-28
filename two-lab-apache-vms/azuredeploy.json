@@ -39,7 +39,7 @@
         "description": "The Ubuntu version for the VM. This will pick a fully patched image of this given Ubuntu version. Allowed values: 12.04.5-LTS, 14.04.2-LTS, 15.04."
       }
     },
-      "virtualNetworkResourceGroup": {
+      "vNetResourceGroup": {
         "type": "string",
         "defaultValue": "CorpITRG-X",
         "metadata": {
@@ -121,7 +121,7 @@
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses',concat(variables('publicIPAddressName'), '0'))]"
               },
               "subnet": {
-                "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', parameters('virtualNetworkResourceGroup'), '/providers/Microsoft.Network/virtualNetworks/', parameters('firstVMNetwork'), '/subnets/', variables('subnetName'))]"
+                "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', parameters('vNetResourceGroup'), '/providers/Microsoft.Network/virtualNetworks/', parameters('firstVMNetwork'), '/subnets/', variables('subnetName'))]"
               }
             }
           }
@@ -224,7 +224,7 @@
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses',concat(variables('publicIPAddressName'), '1'))]"
               },
               "subnet": {
-                "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', parameters('virtualNetworkResourceGroup'), '/providers/Microsoft.Network/virtualNetworks/', parameters('secondVMNetwork'), '/subnets/', variables('subnetName'))]"
+                "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', parameters('vNetResourceGroup'), '/providers/Microsoft.Network/virtualNetworks/', parameters('secondVMNetwork'), '/subnets/', variables('subnetName'))]"
               }
             }
           }
