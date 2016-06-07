@@ -50,12 +50,24 @@
 				"description": "The Username of the admininstrative user for each VM instance created"
 			}
 		},
-		"adminPassword": {
-			"type": "securestring",
-			"metadata": {
-				"description": "The Password of the admininstrative user for each VM instance created"
-			}
-		},
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The Password of the admininstrative user for each VM instance created"
+      }
+    },
+    "virtualNetwork": {
+      "type": "string",
+      "defaultValue": "Target Vnet"
+    },
+    "subnet": {
+      "type": "string",
+      "defaultValue": "Target Subnet"
+    },
+    "vNetResourceGroup": {
+      "type": "string",
+      "defaultValue": "Resource Group of Vnet"
+    },
 		"location": {
 			"type": "string",
 			"metadata": {
@@ -106,11 +118,11 @@
 	},
 	"variables": {
 		"addressPrefix": "10.0.0.0/16",
-		"subnetName": "Subnet",
-		"subnetPrefix": "10.0.0.0/24",
-		"virtualNetworkName": "vmssvnet",
-		"vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
-		"subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
+//		"subnetName": "Subnet",
+//		"subnetPrefix": "10.0.0.0/24",
+//		"virtualNetworkName": "vmssvnet",
+//		"vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
+//		"subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
 		"publicIPAddressName": "publicip1",
 		"publicIPAddressID": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]",
 		"nicName": "networkInterface1",
@@ -126,27 +138,27 @@
 		"apiVersion":"2015-06-15"
 	},
 	"resources": [
-		{
-			"apiVersion": "[variables('apiVersion')]",
-			"type": "Microsoft.Network/virtualNetworks",
-			"name": "[variables('virtualNetworkName')]",
-			"location": "[parameters('location')]",
-			"properties": {
-				"addressSpace": {
-					"addressPrefixes": [
-						"[variables('addressPrefix')]"
-					]
-				},
-				"subnets": [
-					{
-						"name": "[variables('subnetName')]",
-						"properties": {
-							"addressPrefix": "[variables('subnetPrefix')]"
-						}
-					}
-				]
-			}
-		},
+//		{
+//			"apiVersion": "[variables('apiVersion')]",
+//			"type": "Microsoft.Network/virtualNetworks",
+//			"name": "[variables('virtualNetworkName')]",
+//			"location": "[parameters('location')]",
+//			"properties": {
+//				"addressSpace": {
+//					"addressPrefixes": [
+//						"[variables('addressPrefix')]"
+//					]
+//				},
+//				"subnets": [
+//					{
+//						"name": "[variables('subnetName')]",
+//						"properties": {
+//							"addressPrefix": "[variables('subnetPrefix')]"
+//						}
+//					}
+//				]
+//			}
+//		},
 		{
 			"apiVersion": "[variables('apiVersion')]",
 			"type": "Microsoft.Network/publicIPAddresses",
@@ -264,8 +276,10 @@
 											"name": "ip1",
 											"properties": {
 												"subnet": {
-													"id": "[variables('subnetRef')]"
-												},
+//													"id": "[variables('subnetRef')]"
+                          "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', parameters('vNetResourceGroup'), '/providers/Microsoft.Network/virtualNetworks/', parameters('virtualNetwork'), '/subnets/', variables('subnet'))]"
+												
+                        },
 												"loadBalancerBackendAddressPools": [
 													{
 														"id": "[variables('lbBEAddressPoolID')]"
