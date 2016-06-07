@@ -209,9 +209,7 @@
 			"name": "[parameters('vmSSName')]",
 			"location": "[parameters('location')]",
 			"dependsOn": [
-				"[concat('Microsoft.Network/loadBalancers/',variables('lbName'))]",
-				"[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', parameters('vNetResourceGroup'), '/providers/Microsoft.Network/virtualNetworks/', parameters('virtualNetwork'))]"
-
+				"[concat('Microsoft.Network/loadBalancers/',variables('lbName'))]"
 			],
 			"sku": {
 				"name": "[parameters('vmSize')]",
