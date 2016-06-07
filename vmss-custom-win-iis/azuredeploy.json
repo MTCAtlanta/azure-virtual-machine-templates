@@ -248,7 +248,7 @@
 											"name": "ip1",
 											"properties": {
 												"subnet": {
-                          "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', parameters('vNetResourceGroup'), '/providers/Microsoft.Network/virtualNetworks/', parameters('virtualNetwork'), '/subnets/', variables('subnet'))]"
+                          "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', parameters('vNetResourceGroup'), '/providers/Microsoft.Network/virtualNetworks/', parameters('virtualNetwork'), '/subnets/', parameters('subnet'))]"
 												
                         },
 												"loadBalancerBackendAddressPools": [
