@@ -68,29 +68,12 @@
       "type": "string",
       "defaultValue": "Resource Group of Vnet"
     },
-    "location": {
-      "type": "string",
-      "allowedValues": [
-        "East US",
-        "East US 2",
-        "West US",
-        "Central US",
-        "South Central US",
-        "North Central US",
-        "North Europe",
-        "West Europe",
-        "Southeast Asia",
-        "East Asia",
-        "Japan West",
-        "Japan East",
-        "Brazil South",
-        "Australia East",
-        "Australia Southeast"
-      ],
-      "metadata": {
-        "description": "Azure region where all resources will be deployed. This is distinct from resource group location."
-      }
-    },
+		"location": {
+			"type": "string",
+			"metadata": {
+				"description": "Deployment location"
+			}
+		},
 		"sourceImageVhdUri": {
 			"type": "string",
 			"metadata": {
@@ -148,33 +131,8 @@
 		"lbBEAddressPoolID": "[concat(variables('lbID'),'/backendAddressPools/',variables('lbBEAddressPool'))]",
 		"lbWebProbeID": "[concat(variables('lbID'),'/probes/',variables('lbWebProbeName'))]",
     "apiVersion": "2015-06-15",
-    "storageAccountType": "Standard_LRS",
-    "saCount": 5,
-    "newStorageAccountSuffix": "[concat(parameters('vmSSName'), 'sa')]",
-    "uniqueStringArray": [
-      "[concat(uniqueString(concat(resourceGroup().id, variables('newStorageAccountSuffix'), '0')))]",
-      "[concat(uniqueString(concat(resourceGroup().id, variables('newStorageAccountSuffix'), '1')))]",
-      "[concat(uniqueString(concat(resourceGroup().id, variables('newStorageAccountSuffix'), '2')))]",
-      "[concat(uniqueString(concat(resourceGroup().id, variables('newStorageAccountSuffix'), '3')))]",
-      "[concat(uniqueString(concat(resourceGroup().id, variables('newStorageAccountSuffix'), '4')))]"
-    ],
-    "vhdContainerName": "[concat(parameters('vmSSName'), 'vhd')]",
-    "osDiskName": "[concat(parameters('vmSSName'), 'osdisk')]"
 	},
   "resources": [
-    {
-      "type": "Microsoft.Storage/storageAccounts",
-      "name": "[concat(variables('uniqueStringArray')[copyIndex()], variables('newStorageAccountSuffix'))]",
-      "location": "[parameters('location')]",
-      "apiVersion": "[variables('apiVersion')]",
-      "copy": {
-        "name": "storageLoop",
-        "count": "[variables('saCount')]"
-      },
-      "properties": {
-        "accountType": "[variables('storageAccountType')]"
-      }
-    },
     {
       "apiVersion": "[variables('apiVersion')]",
       "type": "Microsoft.Network/publicIPAddresses",
@@ -251,7 +209,6 @@
       "name": "[parameters('vmSSName')]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "storageLoop",
         "[concat('Microsoft.Network/loadBalancers/',variables('lbName'))]"
       ],
       "sku": {
@@ -266,14 +223,7 @@
         "virtualMachineProfile": {
           "storageProfile": {
             "osDisk": {
-              "vhdContainers": [
-                "[concat('https://', variables('uniqueStringArray')[0], variables('newStorageAccountSuffix'), '.blob.core.windows.net/', variables('vhdContainerName'))]",
-                "[concat('https://', variables('uniqueStringArray')[1], variables('newStorageAccountSuffix'), '.blob.core.windows.net/', variables('vhdContainerName'))]",
-                "[concat('https://', variables('uniqueStringArray')[2], variables('newStorageAccountSuffix'), '.blob.core.windows.net/', variables('vhdContainerName'))]",
-                "[concat('https://', variables('uniqueStringArray')[3], variables('newStorageAccountSuffix'), '.blob.core.windows.net/', variables('vhdContainerName'))]",
-                "[concat('https://', variables('uniqueStringArray')[4], variables('newStorageAccountSuffix'), '.blob.core.windows.net/', variables('vhdContainerName'))]"
-              ],
-              "name": "[variables('osDiskName')]",
+              "name": "vmssosdisk",
               "caching": "ReadOnly",
               "createOption": "FromImage",
               "osType": "Windows",
@@ -281,7 +231,7 @@
                 "uri": "[parameters('sourceImageVhdUri')]"
               }
             }
-					},
+          },
           "osProfile": {
             "computerNamePrefix": "[parameters('vmSSName')]",
             "adminUsername": "[parameters('adminUsername')]",
