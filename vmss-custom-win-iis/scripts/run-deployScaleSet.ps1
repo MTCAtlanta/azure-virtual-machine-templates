@@ -1,8 +1,7 @@
 ﻿$args=@{
     'scalesetDNSPrefix'='vmss'+[System.Guid]::NewGuid().toString();
-###    'newStorageAccountName'=[System.Guid]::NewGuid().toString().Replace('-','').Substring(1,24);
-    'newStorageAccountName'='d509a48cbb34c22bd85750e7';
-    'resourceGroupName'='vmssrg01';
+    'newStorageAccountName'=[System.Guid]::NewGuid().toString().Replace('-','').Substring(1,24);
+    'resourceGroupName'='vmssrgfinal';
     'location'='eastus2';
     'scaleSetVMSize'='Standard_D3';
     'customImageStorageAccountName'='dxcustom';

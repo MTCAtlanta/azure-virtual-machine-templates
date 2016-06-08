@@ -7,9 +7,12 @@ param(
     [string]$location,
     [Parameter(Mandatory=$true)]
     [string]$resourceGroupName,
-    [string]$customImageStorageAccountName='sdaviesarmne',
-    [string]$customImageContainer='images',
-    [string]$customImageBlobName='IISBase-osDisk.vhd',
+    [Parameter(Mandatory=$true)]
+    [string]$customImageStorageAccountName,
+    [Parameter(Mandatory=$true)]
+    [string]$customImageContainer,
+    [Parameter(Mandatory=$true)]
+    [string]$customImageBlobName,
     [Parameter(Mandatory=$true)]
     [string]$newStorageAccountName,
     [string]$newStorageAccountType='Standard_LRS',
@@ -30,32 +33,6 @@ param(
     [string]$subnet,
     [string]$vNetResourceGroup='vNetResourceGroup'
 )
-
-
-#################################################################
-#### Section: Pre-execution validation steps in this section ####
-#################################################################
-
-# Verify that Storage Account Name is Globally Unique
-$newStorageAccountName=$newStorageAccountName.ToLowerInvariant()
-if (-not (Get-AzureRmStorageAccount -ResourceGroupName $resourceGroupName -Name $newStorageAccountName -ErrorAction SilentlyContinue))
-{
-    if (Test-AzureName -Storage -Name $newStorageAccountName -ErrorAction Stop)
-    {
-        throw "Storage Account Name is not Globally Unique. Please use a different Storage Account Name and try again."
-    }
-}
-
-# Verify that Scale Set DNS Name is Globally Unique
-$scaleSetDNSPrefix=$scaleSetDNSPrefix.ToLowerInvariant()
-if (-not (Get-AzureRmPublicIpAddress  -ResourceGroupName $resourceGroupName | where Location -eq $location).DnsSettings.DomainNameLabel -eq  $scaleSetDNSPrefix)
-{
-    if (-not (Test-AzureRmDnsAvailability -DomainQualifiedName $scaleSetDNSPrefix -Location $location -ErrorAction Stop))
-    {
-        throw "Scale Set DNS Name is not Globally Unique. Please use a different Scale Set DNS Name and try again."
-    }
-}
-
 
 
 #################################################################
@@ -82,7 +59,7 @@ $vNetResourceGroup = $virtualNetworkConfig.ResourceGroupName
 
 # Prompt admin for the subnet where the Scale Set will deploy
 $subnet =
-($virtualNetwork.Subnets |  Select-Object -Property Name, AddressPrefix |
+($virtualNetworkConfig.Subnets |  Select-Object -Property Name, AddressPrefix |
         Out-GridView `
         -Title "Select the subnet in $virtualNetwork where the Scale Set will be deployed ..." `
         -PassThru).Name
@@ -96,13 +73,13 @@ $subnet =
 Select-AzureRmSubscription -SubscriptionName $SubName
 
 # Create or modify Resource Group for Scale Set deployment in the target Region
-###New-AzureRmResourceGroup -Name $resourceGroupName -Location $location
+New-AzureRmResourceGroup -Name $resourceGroupName -Location $location
 
 # Create a new Storage Account for the image and store Primary Key for copy operation
 $parameters=@{"location"="$location";"newStorageAccountName"="$newStorageAccountName";"storageAccountType"="$newStorageAccountType"}
 $templateUri="$repoUri$storageAccountTemplate"
 
-###New-AzureRmResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateUri $templateUri -TemplateParameterObject $parameters -Name 'CreateStorageAccount'
+New-AzureRmResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateUri $templateUri -TemplateParameterObject $parameters -Name 'CreateStorageAccount'
 
 $destkey=(Get-AzureRmStorageAccountKey -Name $newStorageAccountName -ResourceGroupName $resourceGroupName).Key1
 
@@ -116,7 +93,7 @@ if ($destcontainer -eq $null){
     New-AzureStorageContainer -Context $destcontext -Name $newImageContainer
 }
     
-###Get-AzureStorageBlob -Container $customImageContainer -Context $srccontext -Blob $customImageBlobName | Start-CopyAzureStorageBlob -DestContext $destContext -DestContainer $newImageContainer -DestBlob $newImageBlobName -ErrorVariable $copyerror -ErrorAction Continue|Get-AzureStorageBlobCopyState -WaitForComplete
+Get-AzureStorageBlob -Container $customImageContainer -Context $srccontext -Blob $customImageBlobName | Start-CopyAzureStorageBlob -DestContext $destContext -DestContainer $newImageContainer -DestBlob $newImageBlobName -ErrorVariable $copyerror -ErrorAction Continue|Get-AzureStorageBlobCopyState -WaitForComplete
 
 
 # Grab new image URI and deploy the scale set using the image as the source
@@ -125,4 +102,4 @@ $sourceImageVhdUri=(Get-AzureStorageBlob -Container $newImageContainer -Context 
 $parameters=@{"vmSSName"="$scaleSetName";"instanceCount"=$scaleSetInstanceCount;"vmSize"="$scaleSetVMSize";"dnsNamePrefix"="$scaleSetDNSPrefix";"adminUsername"=$scaleSetVMCredentials.UserName;"adminPassword"=$scaleSetVMCredentials.GetNetworkCredential().Password;"virtualNetwork"=$virtualNetwork;"subnet"=$subnet;"vNetResourceGroup"=$vnetResourceGroup;"location"="$location";"sourceImageVhdUri"="$sourceImageVhdUri"}
 $templateUri="$repoUri$scaleSetTemplate"
 
-###New-AzureResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateUri $templateUri -TemplateParameterObject $parameters -Name 'createscaleset'
+New-AzureRmResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateUri $templateUri -TemplateParameterObject $parameters -Name 'CreateScaleSet'
