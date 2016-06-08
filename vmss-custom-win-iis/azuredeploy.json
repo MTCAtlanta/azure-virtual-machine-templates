@@ -233,15 +233,18 @@
         },
         "virtualMachineProfile": {
 					"storageProfile": {
-						"osDisk": {
-							"name": "vmssosdisk",
-							"caching": "ReadOnly",
-							"createOption": "FromImage",
-							"osType": "Windows",
-							"image": {
-								"uri": "[parameters('sourceImageVhdUri')]"
-							}
-						}
+            "osDisk": {
+              "vhdContainers":[
+                "[concat('https://', variables('storageAccount'), '.blob.core.windows.net/vhds')]"
+              ],
+              "name": "vmssosdisk",
+              "caching": "ReadOnly",
+              "createOption": "FromImage",
+              "osType": "Windows",
+              "image": {
+                "uri": "[parameters('sourceImageVhdUri')]"
+              }
+            }
 					},
           "osProfile": {
             "computerNamePrefix": "[parameters('vmSSName')]",
