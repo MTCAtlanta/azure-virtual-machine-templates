@@ -234,12 +234,8 @@
       "name": "[parameters('vmSSName')]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[concat('Microsoft.Network/loadBalancers/',variables('lbName'))]",
-        "[concat('Microsoft.Storage/storageAccounts/',variables('uniqueStringArray')[0], variables('newStorageAccountSuffix'))]",
-        "[concat('Microsoft.Storage/storageAccounts/',variables('uniqueStringArray')[1], variables('newStorageAccountSuffix'))]",
-        "[concat('Microsoft.Storage/storageAccounts/',variables('uniqueStringArray')[2], variables('newStorageAccountSuffix'))]",
-        "[concat('Microsoft.Storage/storageAccounts/',variables('uniqueStringArray')[3], variables('newStorageAccountSuffix'))]",
-        "[concat('Microsoft.Storage/storageAccounts/',variables('uniqueStringArray')[4], variables('newStorageAccountSuffix'))]"
+        "storageLoop",
+        "[concat('Microsoft.Network/loadBalancers/',variables('lbName'))]"
       ],
       "sku": {
         "name": "[parameters('vmSize')]",
