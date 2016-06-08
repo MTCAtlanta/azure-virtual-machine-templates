@@ -12,7 +12,7 @@
     [string]$newStorageAccountType,
     [string]$newImageContainer='images',
     [string]$newImageBlobName='IISBase-osDisk.vhd',
-    [string]$repoUri='https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vmss-windows-customimage/',
+    [string]$repoUri='https://github.com/MTCAtlanta/azure-virtual-machine-templates/tree/master/vmss-custom-win-iis/',
     [string]$storageAccountTemplate='templates/storageaccount.json',
     [Parameter(Mandatory=$true)]
     [string]$scaleSetName,
@@ -24,6 +24,7 @@
     [PSCredential]$scaleSetVMCredentials=(Get-Credential -Message 'Enter Credentials for new scale set VMs'),
     [string]$scaleSetTemplate='azuredeploy.json'
 )
+
 
 # Create Resource Group for Scale Set deployment in the target Region
 New-AzureRmResourceGroup -Name $resourceGroupName -Location $location
@@ -49,3 +50,14 @@ if (-not (Get-AzureRmPublicIpAddress  -ResourceGroupName $resourceGroupName | wh
         throw "Scale Set DNS Name is not Globally Unique. Please use a different Scale Set DNS Name and try again."
     }
 }
+
+
+# Create a new Storage Account for the image
+$parameters=@{"location"="$location";"newStorageAccountName"="$newStorageAccountName";"storageAccountType"="$newStorageAccountType"}
+$templateUri="$repoUri$storageAccountTemplate"
+
+New-AzureRmResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateUri $templateUri -TemplateParameterObject $parameters -Name 'CreateStorageAccount'
+
+# Copy the blob from the source to the new storage account
+
+$destkey=(Get-AzureRmStorageAccountKey -Name $newStorageAccountName -ResourceGroupName $resourceGroupName).Key1
