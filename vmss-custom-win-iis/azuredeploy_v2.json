@@ -131,6 +131,7 @@
 		"lbBEAddressPoolID": "[concat(variables('lbID'),'/backendAddressPools/',variables('lbBEAddressPool'))]",
 		"lbWebProbeID": "[concat(variables('lbID'),'/probes/',variables('lbWebProbeName'))]",
     "apiVersion": "2015-06-15",
+
     "storageAccount":  "[concat(uniqueString(concat(resourceGroup().id, parameters('dnsNamePrefix'))))]",
     "storageAccountType": "Standard_LRS"
 	},
@@ -232,17 +233,20 @@
           "mode": "Manual"
         },
         "virtualMachineProfile": {
-					"storageProfile": {
-						"osDisk": {
-							"name": "vmssosdisk",
-							"caching": "ReadOnly",
-							"createOption": "FromImage",
-							"osType": "Windows",
-							"image": {
-								"uri": "[parameters('sourceImageVhdUri')]"
-							}
-						}
-					},
+          "storageProfile": {
+            "osDisk": {
+              "name": "vmssosdisk",
+              "caching": "ReadOnly",
+              "createOption": "FromImage",
+              "osType": "Windows",
+              "image": {
+                "uri": "[parameters('sourceImageVhdUri')]"
+              },
+              "vhd": {
+                "uri": "[concat('http://',variables('storageAccount'),'.blob.core.windows.net/vhds/',variables('OSDiskName'), '0','.vhd')]"
+              }
+            }
+          },
           "osProfile": {
             "computerNamePrefix": "[parameters('vmSSName')]",
             "adminUsername": "[parameters('adminUsername')]",
