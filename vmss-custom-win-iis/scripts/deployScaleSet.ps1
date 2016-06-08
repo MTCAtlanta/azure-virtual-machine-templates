@@ -24,7 +24,11 @@ param(
     [Parameter(Mandatory=$true)]
     [string]$scaleSetDNSPrefix,
     [PSCredential]$scaleSetVMCredentials=(Get-Credential -Message 'Enter Credentials for new scale set VMs'),
-    [string]$scaleSetTemplate='azuredeploy.json'
+    [string]$scaleSetTemplate='azuredeploy.json',
+    [string]$SubName,
+    [string]$virtualNetwork,
+    [string]$subnet,
+    [string]$vNetResourceGroup='vNetResourceGroup'
 )
 
 
@@ -53,10 +57,43 @@ if (-not (Get-AzureRmPublicIpAddress  -ResourceGroupName $resourceGroupName | wh
 }
 
 
+
+#################################################################
+### Section: Query Admin for Information on Target Environment ##
+#################################################################
+
+# Prompt admin for the Subscription where the Scale Set will be deployed
+$SubName =
+(Get-AzureRmSubscription |
+        Out-GridView `
+        -Title "Select an Azure Subscription to deploy Scale Set (The Subscription must already contain the target virtual network) ..." `
+        -PassThru).SubscriptionName 
+
+# Prompt admin for the Virtual Network where the Scale Set will deploy
+$virtualNetworkConfig =
+(Get-AzureRmVirtualNetwork |  Select-Object -Property Name, Subnets, Location, ResourceGroupName |
+        Out-GridView `
+        -Title "Select the Virtual Network where the Scale Set will be deployed ..." `
+        -PassThru)
+
+$virtualNetwork = $virtualNetworkConfig.Name
+
+$vNetResourceGroup = $virtualNetworkConfig.ResourceGroupName
+
+# Prompt admin for the subnet where the Scale Set will deploy
+$subnet =
+($virtualNetwork.Subnets |  Select-Object -Property Name, AddressPrefix |
+        Out-GridView `
+        -Title "Select the subnet in $virtualNetwork where the Scale Set will be deployed ..." `
+        -PassThru).Name
+
+
 #################################################################
 ## Section: Create Resources - Resource Group/Storage/Scale Set #
 #################################################################
 
+# Set Resource Group where Scale Set will be deployed (must already contain target virtual network)
+Select-AzureRmSubscription -SubscriptionName $SubName
 
 # Create or modify Resource Group for Scale Set deployment in the target Region
 ###New-AzureRmResourceGroup -Name $resourceGroupName -Location $location
@@ -85,9 +122,7 @@ if ($destcontainer -eq $null){
 # Grab new image URI and deploy the scale set using the image as the source
 $sourceImageVhdUri=(Get-AzureStorageBlob -Container $newImageContainer -Context $destContext -Blob $newImageBlobName).ICloudBlob.StorageUri.PrimaryUri.AbsoluteUri
 
-$sourceImageVhdUri
-
-###$parameters=@{"vmSSName"="$scaleSetName";"instanceCount"=$scaleSetInstanceCount;"vmSize"="$scaleSetVMSize";"dnsNamePrefix"="$scaleSetDNSPrefix";"adminUsername"=$scaleSetVMCredentials.UserName;"adminPassword"=$scaleSetVMCredentials.GetNetworkCredential().Password;"location"="$location";"sourceImageVhdUri"="$sourceImageVhdUri"}
-###$templateUri="$repoUri$scaleSetTemplate"
+$parameters=@{"vmSSName"="$scaleSetName";"instanceCount"=$scaleSetInstanceCount;"vmSize"="$scaleSetVMSize";"dnsNamePrefix"="$scaleSetDNSPrefix";"adminUsername"=$scaleSetVMCredentials.UserName;"adminPassword"=$scaleSetVMCredentials.GetNetworkCredential().Password;"virtualNetwork"=$virtualNetwork;"subnet"=$subnet;"vNetResourceGroup"=$vnetResourceGroup;"location"="$location";"sourceImageVhdUri"="$sourceImageVhdUri"}
+$templateUri="$repoUri$scaleSetTemplate"
 
 ###New-AzureResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateUri $templateUri -TemplateParameterObject $parameters -Name 'createscaleset'
