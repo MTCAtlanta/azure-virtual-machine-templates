@@ -162,8 +162,7 @@
       "type": "Microsoft.Network/loadBalancers",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[concat('Microsoft.Network/loadBalancers/',variables('lbName'))]",
-        "[concat('Microsoft.Storage/storageAccounts/',variables('storageAccount'))]"
+        "[concat('Microsoft.Network/publicIPAddresses/',variables('publicIPAddressName'))]"
       ],
       "properties": {
         "frontendIPConfigurations": [
@@ -221,7 +220,8 @@
       "name": "[parameters('vmSSName')]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[concat('Microsoft.Network/loadBalancers/',variables('lbName'))]"
+        "[concat('Microsoft.Network/loadBalancers/',variables('lbName'))]",
+        "[concat('Microsoft.Storage/storageAccounts/',variables('storageAccount'))]"
       ],
       "sku": {
         "name": "[parameters('vmSize')]",
