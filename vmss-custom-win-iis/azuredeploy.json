@@ -68,12 +68,29 @@
       "type": "string",
       "defaultValue": "Resource Group of Vnet"
     },
-		"location": {
-			"type": "string",
-			"metadata": {
-				"description": "Deployment location"
-			}
-		},
+    "location": {
+      "type": "string",
+      "allowedValues": [
+        "East US",
+        "East US 2",
+        "West US",
+        "Central US",
+        "South Central US",
+        "North Central US",
+        "North Europe",
+        "West Europe",
+        "Southeast Asia",
+        "East Asia",
+        "Japan West",
+        "Japan East",
+        "Brazil South",
+        "Australia East",
+        "Australia Southeast"
+      ],
+      "metadata": {
+        "description": "Azure region where all resources will be deployed. This is distinct from resource group location."
+      }
+    },
 		"sourceImageVhdUri": {
 			"type": "string",
 			"metadata": {
