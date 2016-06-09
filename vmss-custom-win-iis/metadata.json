@@ -1,7 +1,7 @@
 {
-  "itemDisplayName": "Deploy a VM Scale Set with a Windows custom image",
-  "description": "This template allows you to deploy a simple VM Scale Set usng a custom Windows image. These VMs are behind a load balancer with HTTP load balancing (by default on port 80)",
-  "summary": "This template deploys a Custom Widnows Image behind a load balancer with HTTP load balancing rules",
-  "githubUsername": "simongdavies",
-  "dateUpdated": "2016-6-6"
+  "itemDisplayName": "Deploy a VM Scale Set based on a Windows Custom Image and configure website via DCS Template",
+  "description": "This template allows you to deploy a simple VM Scale Set usng a custom Windows image. These VMs are behind a load balancer with HTTP load balancing (by default on port 80). This template also allows you to specify a source DSC template and web deploy package to be installed on the individual instances.",
+  "summary": "This template deploys a Custom Windows Image behind a load balancer with HTTP load balancing rules and installs a default DSC template and Webdeploy package",
+  "githubUsername": "albertwo1978",
+  "dateUpdated": "2016-6-8"
 }

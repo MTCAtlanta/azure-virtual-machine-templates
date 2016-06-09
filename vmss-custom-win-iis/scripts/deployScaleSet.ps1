@@ -4,9 +4,15 @@
 
 param(
     [Parameter(Mandatory=$true)]
-    [string]$location,
+    [string]$scaleSetDNSPrefix,
+    [Parameter(Mandatory=$true)]
+    [string]$newStorageAccountName,
     [Parameter(Mandatory=$true)]
     [string]$resourceGroupName,
+    [Parameter(Mandatory=$true)]
+    [string]$location,
+    [Parameter(Mandatory=$true)]
+    [string]$scaleSetVMSize,
     [Parameter(Mandatory=$true)]
     [string]$customImageStorageAccountName,
     [Parameter(Mandatory=$true)]
@@ -14,7 +20,9 @@ param(
     [Parameter(Mandatory=$true)]
     [string]$customImageBlobName,
     [Parameter(Mandatory=$true)]
-    [string]$newStorageAccountName,
+    [string]$modulesUrl,
+    [Parameter(Mandatory=$true)]
+    [string]$webdeploypkg,
     [string]$newStorageAccountType='Standard_LRS',
     [string]$newImageContainer='images',
     [string]$newImageBlobName='IISBase-osDisk.vhd',
@@ -22,10 +30,6 @@ param(
     [string]$storageAccountTemplate='templates/storageaccount.json',
     [string]$scaleSetName='wincustom',
     [int]$scaleSetInstanceCount=2,
-    [Parameter(Mandatory=$true)]
-    [string]$scaleSetVMSize,
-    [Parameter(Mandatory=$true)]
-    [string]$scaleSetDNSPrefix,
     [PSCredential]$scaleSetVMCredentials=(Get-Credential -Message 'Enter Credentials for new scale set VMs'),
     [string]$scaleSetTemplate='azuredeploy.json',
     [string]$SubName,
@@ -99,7 +103,7 @@ Get-AzureStorageBlob -Container $customImageContainer -Context $srccontext -Blob
 # Grab new image URI and deploy the scale set using the image as the source
 $sourceImageVhdUri=(Get-AzureStorageBlob -Container $newImageContainer -Context $destContext -Blob $newImageBlobName).ICloudBlob.StorageUri.PrimaryUri.AbsoluteUri
 
-$parameters=@{"vmSSName"="$scaleSetName";"instanceCount"=$scaleSetInstanceCount;"vmSize"="$scaleSetVMSize";"dnsNamePrefix"="$scaleSetDNSPrefix";"adminUsername"=$scaleSetVMCredentials.UserName;"adminPassword"=$scaleSetVMCredentials.GetNetworkCredential().Password;"virtualNetwork"=$virtualNetwork;"subnet"=$subnet;"vNetResourceGroup"=$vnetResourceGroup;"location"="$location";"sourceImageVhdUri"="$sourceImageVhdUri"}
+$parameters=@{"vmSSName"="$scaleSetName";"instanceCount"=$scaleSetInstanceCount;"vmSize"="$scaleSetVMSize";"dnsNamePrefix"="$scaleSetDNSPrefix";"adminUsername"=$scaleSetVMCredentials.UserName;"adminPassword"=$scaleSetVMCredentials.GetNetworkCredential().Password;"virtualNetwork"=$virtualNetwork;"subnet"=$subnet;"vNetResourceGroup"=$vnetResourceGroup;"location"="$location";"sourceImageVhdUri"="$sourceImageVhdUri";"modulesUrl"="$modulesURL";"webdeploypkg"="$webdeploypkg"}
 $templateUri="$repoUri$scaleSetTemplate"
 
 New-AzureRmResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateUri $templateUri -TemplateParameterObject $parameters -Name 'CreateScaleSet'
