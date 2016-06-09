@@ -74,10 +74,22 @@
 				"description": "Deployment location"
 			}
 		},
-		"sourceImageVhdUri": {
+    "sourceImageVhdUri": {
+      "type": "string",
+      "metadata": {
+        "description": "The source of the blob containing the custom image"
+      }
+    },
+    "modulesURL": {
+      "type": "string",
+      "metadata": {
+        "description": "This is the URL to the PowerShell DSC module to be applied to the Scale Set instance"
+      }
+    },
+		"webdeploypkg": {
 			"type": "string",
 			"metadata": {
-				"description": "The source of the blob containing the custom image"
+				"description": "This is the URL to the Web Deploy package to be deployed to the Scale Set instance"
 			}
 		},
 		"frontEndLBPort": {
