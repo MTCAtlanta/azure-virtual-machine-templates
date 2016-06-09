@@ -274,35 +274,7 @@
                 }
               }
             ]
-          },
-          "resources": [
-          {
-          "name": "DSCExt",
-          "type": "extensions",
-          "location": "[parameters('location')]",
-          "apiVersion": "2015-05-01-preview",
-          "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachineScaleSets/', parameters('vmSSName'))]"
-          ],
-          "tags": {
-          },
-          "properties": {
-            "publisher": "Microsoft.Powershell",
-            "type": "DSC",
-            "typeHandlerVersion": "2.8",
-            "settings": {
-              "modulesUrl": "[parameters('modulesUrl')]",
-              "configurationFunction": "ConfigureWebServer.ps1\\Main",
-              "properties": {
-                "WebDeployPackagePath": "[parameters('webdeploypkg')]",
-                "UserName": "[parameters('adminUserName')]",
-                "Password": "[parameters('adminPassword')]"
-              }
-            },
-            "protectedSettings": {}
           }
-        }
-      ]
         }
       }
     },
@@ -310,7 +282,7 @@
       "type": "Microsoft.Insights/autoscaleSettings",
       "apiVersion": "2015-04-01",
       "name": "autoscalewad",
-      "location": "[parameters('resourceLocation')]",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "[concat('Microsoft.Compute/virtualMachineScaleSets/', parameters('vmSSName'))]"
       ],
