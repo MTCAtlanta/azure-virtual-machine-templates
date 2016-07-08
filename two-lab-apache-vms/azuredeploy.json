@@ -5,10 +5,6 @@
     "UniqueStorageAccountName": {
       "type": "string",
       "defaultValue": "",
-      "constraints": {
-          "regex": "^[a-z0-9]{1,30}$",
-          "validationMessage": "VM name prefix must be between 1 and 30 characters long and can contain only numbers and lowercase letters (e.g. lustre)"
-      },
       "metadata": {
         "description": "Relative DNS Name for the Storage Account where the Virtual Machine's disks will be placed, must be globally unique."
       }
